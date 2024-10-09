@@ -1,0 +1,38 @@
+/*  */
+
+.brand{
+    font-weight: 800 !important;
+  
+}
+ i{
+    color: rgb(241, 21, 57);
+}
+.nav-item{
+    margin-right: 15px;
+}
+.last{
+    margin-right: 50px;
+}
+
+a:hover{
+    font-weight: 600 !important;
+    color:  rgb(241, 21, 57) !important;
+}
+@media (max-width: 1300px) {
+    .container-fluid.offset-1 {
+      margin-left: 0 !important; 
+    }
+    .nav-item{
+        margin-right: 0px !important;
+    }
+    .last{
+        margin-right: 0px !important;
+    }
+  }
+  
+  @media (max-width: 1033px) {
+    
+    li{
+        font-size: 14px;
+    }
+  }
