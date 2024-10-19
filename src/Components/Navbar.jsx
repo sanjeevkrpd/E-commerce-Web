@@ -1,7 +1,31 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
+  const [userName, setUserName] = useState(null);
+  const [isLogged, setIsLogged] = useState(false);
+
+  const userHandler = async () => {
+    // Retrieve username and logged-in status from localStorage
+    const u = localStorage.getItem("userName");
+    const l = localStorage.getItem("isLogged");
+
+    console.log(u, l);
+
+    // Set userName and isLogged state based on localStorage values
+    if (u) {
+      setUserName(u); // userName should be stored as a string in localStorage, no need for JSON.parse()
+    }
+
+    if (l) {
+      setIsLogged(JSON.parse(l)); // isLogged is likely a boolean, so parse it
+    }
+  };
+
+  useEffect(() => {
+    userHandler();
+  }, []);
+
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -11,30 +35,19 @@ const Navbar = () => {
           </Link>
           <ul className="navbar-nav">
             <li className="nav-item">
-              <button type="button" className="btn  position-relative">
-              <Link
-                  className="nav-link active"
-                  aria-current="page"
-                  to="/checkout"
-                >
-                <i className="fa-solid fa-cart-shopping"></i>
-                </Link>
-                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  1
-                  {/* <span class="visually-hidden">unread messages</span> */}
-                </span>
-              </button>
-            </li>
-
-            {/* <li className="nav-item ">
+              <button type="button" className="btn position-relative">
                 <Link
                   className="nav-link active"
                   aria-current="page"
                   to="/checkout"
                 >
-                <i className="fa-solid fa-cart-shopping"></i>
+                  <i className="fa-solid fa-cart-shopping"></i>
                 </Link>
-              </li> */}
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                  1
+                </span>
+              </button>
+            </li>
           </ul>
 
           <button
@@ -48,25 +61,29 @@ const Navbar = () => {
           >
             <span className="navbar-toggler-icon"></span>
           </button>
+
           <div className="collapse navbar-collapse" id="navbarNavDropdown">
             <ul className="navbar-nav ms-auto"></ul>
 
             <ul className="navbar-nav ms-auto">
-            <li className="nav-item d-flex align-items-center">
-  <form className="d-flex" role="search">
-    <input
-      className="form-control form-control-sm me-2"
-      type="search"
-      placeholder="Search"
-      aria-label="Search"
-    />
-    <button className="btn btn-outline-success btn-sm" type="submit">
-      Search
-    </button>
-  </form>
-</li>
+              <li className="nav-item d-flex align-items-center">
+                <form className="d-flex" role="search">
+                  <input
+                    className="form-control form-control-sm me-2"
+                    type="search"
+                    placeholder="Search"
+                    aria-label="Search"
+                  />
+                  <button
+                    className="btn btn-outline-success btn-sm"
+                    type="submit"
+                  >
+                    Search
+                  </button>
+                </form>
+              </li>
 
-              <li className="nav-item ">
+              <li className="nav-item">
                 <Link
                   className="nav-link active"
                   aria-current="page"
@@ -98,12 +115,12 @@ const Navbar = () => {
                 >
                   <li>
                     <Link className="dropdown-item" to="/action1">
-                      <i className="fa-solid fa-person"></i> Men&apos;s Collection
+                      <i className="fa-solid fa-person"></i> Men's Collection
                     </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/action2">
-                      <i className="fa-solid fa-person-dress"></i> Women
+                      <i className="fa-solid fa-person-dress"></i> Women's
                       Collection
                     </Link>
                   </li>
@@ -121,26 +138,47 @@ const Navbar = () => {
                   </li>
                 </ul>
               </li>
-              <li className="nav-item">
-                <Link
-                  className="nav-link active"
-                  aria-current="page"
-                  to="/login"
-                >
-                  <i className="fa-solid fa-person-shelter"></i> Login
-                </Link>
-              </li>
-              <li className="nav-item ">
-                <Link className="nav-link active" to="/register">
-                  <i className="fa-solid fa-id-card"></i> SignUp
-                </Link>
-              </li>
-              <li className="nav-item last">
-                <Link className="nav-link active" to="/logout">
-                  <i className="fa-solid fa-arrow-right-from-bracket"></i>{" "}
-                  Logout
-                </Link>
-              </li>
+
+              {isLogged ? (
+                <>
+                  <li className="nav-item">
+                    <Link className="nav-link active">
+                      <i className="fa-solid fa-user"></i> {userName}
+                    </Link>
+                  </li>
+
+                  {/* <li className="nav-item">
+                    <h5 className="nav-link active" aria-current="page">
+                      {" "}
+                      <i className="fa-solid fa-user"></i> {userName}
+                    </h5>
+                  </li> */}
+
+                  <li className="nav-item">
+                    <Link className="nav-link active" to="/logout">
+                      <i className="fa-solid fa-right-from-bracket"></i> Logout
+                    </Link>
+                  </li>
+                </>
+              ) : (
+                <>
+                  <li className="nav-item">
+                    <Link
+                      className="nav-link active"
+                      aria-current="page"
+                      to="/login"
+                    >
+                      <i className="fa-solid fa-person-shelter"></i> Login
+                    </Link>
+                  </li>
+
+                  <li className="nav-item">
+                    <Link className="nav-link active" to="/register">
+                      <i className="fa-solid fa-id-card"></i> SignUp
+                    </Link>
+                  </li>
+                </>
+              )}
             </ul>
           </div>
         </div>

@@ -36,6 +36,9 @@ const Login = () => {
      
      if (response.success) {
        toast.success("Login successful 😊");
+       localStorage.setItem("tokens" , response.token);
+       localStorage.setItem("userName", response.user);
+       localStorage.setItem("isLogged", response.isLogged);
        navigate("/");
      } else {
        toast.error(response.message);
