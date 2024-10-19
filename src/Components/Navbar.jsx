@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {
@@ -6,24 +6,36 @@ const Navbar = () => {
   const [isLogged, setIsLogged] = useState(false);
 
   const userHandler = async () => {
-    // Retrieve username and logged-in status from localStorage
+   
     const u = localStorage.getItem("userName");
     const l = localStorage.getItem("isLogged");
 
-    console.log(u, l);
 
-    // Set userName and isLogged state based on localStorage values
+
+    
     if (u) {
-      setUserName(u); // userName should be stored as a string in localStorage, no need for JSON.parse()
+      setUserName(u); 
     }
 
     if (l) {
-      setIsLogged(JSON.parse(l)); // isLogged is likely a boolean, so parse it
+      setIsLogged(l); 
     }
+  };
+
+  const handleLogout = async () => {
+   
+    localStorage.removeItem("tokens");
+    localStorage.removeItem("userName");
+    localStorage.setItem("isLogged", false); 
+
+    
+    setUserName(null);
+    setIsLogged(false);
   };
 
   useEffect(() => {
     userHandler();
+    
   }, []);
 
   return (
@@ -115,12 +127,12 @@ const Navbar = () => {
                 >
                   <li>
                     <Link className="dropdown-item" to="/action1">
-                      <i className="fa-solid fa-person"></i> Men's Collection
+                      <i className="fa-solid fa-person"></i> Men&apos;s Collection
                     </Link>
                   </li>
                   <li>
                     <Link className="dropdown-item" to="/action2">
-                      <i className="fa-solid fa-person-dress"></i> Women's
+                      <i className="fa-solid fa-person-dress"></i> Women&apos;s
                       Collection
                     </Link>
                   </li>
@@ -155,7 +167,7 @@ const Navbar = () => {
                   </li> */}
 
                   <li className="nav-item">
-                    <Link className="nav-link active" to="/logout">
+                    <Link className="nav-link active" onClick={handleLogout}>
                       <i className="fa-solid fa-right-from-bracket"></i> Logout
                     </Link>
                   </li>
