@@ -11,7 +11,7 @@ const Navbar = () => {
           </Link>
           <ul className="navbar-nav">
             <li className="nav-item">
-              <button type="button" class="btn  position-relative">
+              <button type="button" className="btn  position-relative">
               <Link
                   className="nav-link active"
                   aria-current="page"
@@ -19,7 +19,7 @@ const Navbar = () => {
                 >
                 <i className="fa-solid fa-cart-shopping"></i>
                 </Link>
-                <span class="position-absolute top-50 start-100 translate-middle badge rounded-pill bg-danger">
+                <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                   1
                   {/* <span class="visually-hidden">unread messages</span> */}
                 </span>
@@ -52,19 +52,19 @@ const Navbar = () => {
             <ul className="navbar-nav ms-auto"></ul>
 
             <ul className="navbar-nav ms-auto">
-              <li className="nav-item">
-                <form className="d-flex" role="search">
-                  <input
-                    className="form-control me-2"
-                    type="search"
-                    placeholder="Search"
-                    aria-label="Search"
-                  />
-                  <button className="btn btn-outline-success " type="submit">
-                    Search
-                  </button>
-                </form>
-              </li>
+            <li className="nav-item d-flex align-items-center">
+  <form className="d-flex" role="search">
+    <input
+      className="form-control form-control-sm me-2"
+      type="search"
+      placeholder="Search"
+      aria-label="Search"
+    />
+    <button className="btn btn-outline-success btn-sm" type="submit">
+      Search
+    </button>
+  </form>
+</li>
 
               <li className="nav-item ">
                 <Link
@@ -98,7 +98,7 @@ const Navbar = () => {
                 >
                   <li>
                     <Link className="dropdown-item" to="/action1">
-                      <i className="fa-solid fa-person"></i> Men's Collection
+                      <i className="fa-solid fa-person"></i> Men&apos;s Collection
                     </Link>
                   </li>
                   <li>
@@ -125,18 +125,18 @@ const Navbar = () => {
                 <Link
                   className="nav-link active"
                   aria-current="page"
-                  to="/home"
+                  to="/login"
                 >
                   <i className="fa-solid fa-person-shelter"></i> Login
                 </Link>
               </li>
               <li className="nav-item ">
-                <Link className="nav-link active" to="/about">
+                <Link className="nav-link active" to="/register">
                   <i className="fa-solid fa-id-card"></i> SignUp
                 </Link>
               </li>
               <li className="nav-item last">
-                <Link className="nav-link active" to="/about">
+                <Link className="nav-link active" to="/logout">
                   <i className="fa-solid fa-arrow-right-from-bracket"></i>{" "}
                   Logout
                 </Link>
