@@ -1,19 +1,54 @@
-import React, { useState  } from "react";
+import React, { useState } from "react";
 import "./Login.css";
-
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import toast from "react-hot-toast";
 const Login = () => {
-  const [isChecked, setIsChecked] = useState(false); 
-  const [inputs , setInputs] = useState({
-    email : "",
-    password : "",
-  })
-  
-  const handleSubmit = async()=>{
+    
+    const navigate = useNavigate();
+    const [isChecked, setIsChecked] = useState(true); 
 
-  }
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: ""
+  });
+
+  const handleChange = (e) => {
+    setInputs((prevState) => ({
+      ...prevState,
+      [e.target.name]: e.target.value
+    }));
+  };
+
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+
+   try {
+    
+     const res = await axios.post("http://localhost:8080/api/v1/user/login", {
+       email: inputs.email,
+       password: inputs.password
+     });
+
+    
+     const response = res.data;
+
+     
+     if (response.success) {
+       toast.success("Login successful 😊");
+       navigate("/");
+     } else {
+       toast.error(response.message);
+     }
+   } catch (error) {
+     console.log(error);
+     toast.error("Something went wrong 😢");
+   }
+ };
+
 
   const handleCheckboxChange = (event) => {
-    setIsChecked(!event.target.checked); 
+    setIsChecked(event.target.checked);
   };
 
   return (
@@ -34,9 +69,10 @@ const Login = () => {
                   <input
                     type="email"
                     id="form1Example13"
+                    name="email" // Add name attribute
                     className="form-control form-control-lg"
-
-                    
+                    value={inputs.email}
+                    onChange={handleChange}
                   />
                   <label className="form-label" htmlFor="form1Example13">
                     Email address
@@ -47,7 +83,10 @@ const Login = () => {
                   <input
                     type="password"
                     id="form1Example23"
+                    name="password" // Add name attribute
                     className="form-control form-control-lg"
+                    value={inputs.password}
+                    onChange={handleChange}
                   />
                   <label className="form-label" htmlFor="form1Example23">
                     Password
@@ -61,14 +100,12 @@ const Login = () => {
                       type="checkbox"
                       id="form1Example3"
                       checked={isChecked}
-                      onChange={handleCheckboxChange} 
+                      onChange={handleCheckboxChange}
                     />
                     <label className="form-check-label" htmlFor="form1Example3">
-                      {" "}
-                      Remember me{" "}
+                      Remember me
                     </label>
                   </div>
-                  <a href="#!">Forgot password?</a>
                 </div>
 
                 <button
@@ -98,7 +135,6 @@ const Login = () => {
                   data-mdb-ripple-init
                   className="btn btn-primary btn-lg btn-block"
                   style={{ backgroundColor: "#55acee" }}
-                  href="#!"
                   role="button"
                 >
                   <i className="fab fa-twitter me-2"></i>Continue with Twitter

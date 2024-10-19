@@ -7,12 +7,13 @@ import HomePage from './landing_page/Home/HomePage';
 import AboutPage from './landing_page/About/AboutPage';
 import Login from './landing_page/Login/Login';
 import Register from './landing_page/Register/Register';
-
+import  {Toaster} from 'react-hot-toast';
 function App() {
   return (
     <>
       <BrowserRouter>
         <Navbar />
+        <Toaster />
         <Routes>
           <Route path='/' element={<HomePage />} />
           <Route path='/home' element={<HomePage />} />
