@@ -7,21 +7,27 @@ import AboutPage from './landing_page/About/AboutPage';
 import Login from './landing_page/Login/Login';
 import Register from './landing_page/Register/Register';
 import  {Toaster} from 'react-hot-toast';
+import { store } from "./redux/store";
+import { Provider } from "react-redux";
+import DailyProduct from "./landing_page/DailyProducts/DailyProducts";
 function App() {
   return (
     <>
       <BrowserRouter>
-        <Navbar />
-        <Toaster />
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/home' element={<HomePage />} />
-          <Route path='/about' element={<AboutPage />} />
-          <Route path='/login' element={<Login />} />
-          <Route path='register' element={<Register />} />
-          <Route path='*' element={<NotFound />} />
-        </Routes>
-        <Footer />
+        <Provider store={store}>
+          <Navbar />
+          <Toaster />
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/home" element={<HomePage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="/dailyProducts" element={<DailyProduct />} />
+            <Route path="*" element={<NotFound />} />
+          </Routes>
+          <Footer />
+        </Provider>
       </BrowserRouter>
     </>
   );

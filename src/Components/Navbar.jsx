@@ -1,43 +1,63 @@
-import  { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-
+import { useDispatch, useSelector } from "react-redux"; 
+import { logout } from "../redux/Features/AuthSlice"; 
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useEffect } from "react";
+import { login } from "../redux/Features/AuthSlice";
+import {useNavigate} from 'react-router-dom';
 const Navbar = () => {
-  const [userName, setUserName] = useState(null);
-  const [isLogged, setIsLogged] = useState(false);
-
-  const userHandler = async () => {
-   
-    const u = localStorage.getItem("userName");
-    const l = localStorage.getItem("isLogged");
+  const dispatch = useDispatch(); 
+  const navigate = useNavigate();
+  const { isLogged, user } = useSelector((state) => state.auth); 
 
 
-
-    
-    if (u) {
-      setUserName(u); 
-    }
-
-    if (l) {
-      setIsLogged(l); 
-    }
+  const handleLogout = () => {
+    dispatch(logout()); 
   };
+   const token = localStorage.getItem("token");
 
-  const handleLogout = async () => {
-   
-    localStorage.removeItem("tokens");
-    localStorage.removeItem("userName");
-    localStorage.setItem("isLogged", false); 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    const verifyUser = async () => {
+      try {
+       
+        if (token) {
+          const response = await axios.post(
+            "http://localhost:8080/api/v1/user/verifyUser",
+            null,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
 
-    
-    setUserName(null);
-    setIsLogged(false);
-  };
+          if (response.data.success) {
+            toast.success("User Verified Successfully. 😊")
+            const { user } = response.data;
 
+            dispatch(login({ user, token }));
+          }
+
+          localStorage.clear("token");
+          localStorage.clear("user");
+        }
+      } catch (error) {
+        console.error("Verification error:", error);
+      }
+    };
+
+
+ 
   useEffect(() => {
-    userHandler();
     
-  }, []);
+    if(!isLogged && token){
+        verifyUser();
+    }
+  
+  }, [isLogged, token, verifyUser]);
 
+  
   return (
     <>
       <nav className="navbar navbar-expand-lg navbar-light bg-light">
@@ -56,7 +76,7 @@ const Navbar = () => {
                   <i className="fa-solid fa-cart-shopping"></i>
                 </Link>
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  1
+                  {/* handle the cart */}
                 </span>
               </button>
             </li>
@@ -106,7 +126,7 @@ const Navbar = () => {
               </li>
               <li className="nav-item">
                 <Link className="nav-link active" to="/about">
-                  <i className="fa-solid fa-book-open-reader"></i> AboutUs
+                  <i className="fa-solid fa-book-open-reader"></i> About Us
                 </Link>
               </li>
 
@@ -127,7 +147,8 @@ const Navbar = () => {
                 >
                   <li>
                     <Link className="dropdown-item" to="/action1">
-                      <i className="fa-solid fa-person"></i> Men&apos;s Collection
+                      <i className="fa-solid fa-person"></i> Men&apos;s
+                      Collection
                     </Link>
                   </li>
                   <li>
@@ -143,7 +164,7 @@ const Navbar = () => {
                     </Link>
                   </li>
                   <li>
-                    <Link className="dropdown-item" to="/action3">
+                    <Link className="dropdown-item" to="/dailyProducts">
                       <i className="fa-brands fa-product-hunt"></i> Daily
                       Products
                     </Link>
@@ -155,16 +176,10 @@ const Navbar = () => {
                 <>
                   <li className="nav-item">
                     <Link className="nav-link active">
-                      <i className="fa-solid fa-user"></i> {userName}
+                      <i className="fa-solid fa-user"></i> {user}{" "}
+                      {/* Adjust based on your user object */}
                     </Link>
                   </li>
-
-                  {/* <li className="nav-item">
-                    <h5 className="nav-link active" aria-current="page">
-                      {" "}
-                      <i className="fa-solid fa-user"></i> {userName}
-                    </h5>
-                  </li> */}
 
                   <li className="nav-item">
                     <Link className="nav-link active" onClick={handleLogout}>
@@ -186,7 +201,7 @@ const Navbar = () => {
 
                   <li className="nav-item">
                     <Link className="nav-link active" to="/register">
-                      <i className="fa-solid fa-id-card"></i> SignUp
+                      <i className="fa-solid fa-id-card"></i> Sign Up
                     </Link>
                   </li>
                 </>

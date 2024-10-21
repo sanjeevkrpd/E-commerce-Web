@@ -3,8 +3,11 @@ import "./Login.css";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import toast from "react-hot-toast";
+import { useDispatch} from "react-redux";
+import { login } from "../../redux/Features/AuthSlice";
 const Login = () => {
     
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const [isChecked, setIsChecked] = useState(true); 
 
@@ -35,10 +38,14 @@ const Login = () => {
 
      
      if (response.success) {
-       toast.success("Login successful 😊");
-       localStorage.setItem("tokens" , response.token);
-       localStorage.setItem("userName", response.user);
-       localStorage.setItem("isLogged", response.isLogged);
+      toast.success("Login successful 😊");
+      const user = response.user;
+      
+      const token = response.token;
+       localStorage.setItem("user" ,user);
+       localStorage.setItem("token" ,token);
+        dispatch(login({user, token}))
+     
        navigate("/");
      } else {
        toast.error(response.message);

@@ -1,13 +1,72 @@
-import React from 'react'
-import './Register.css'
+import { useState } from "react";
+import "./Register.css";
+import axios from "axios";
+import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { login } from "../../redux/Features/AuthSlice";
 const Register = () => {
+
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  let [data, setData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    confirm : ""
+  });
+
+ const handleSubmit = async (e) => {
+   e.preventDefault();
+
+   // Check if passwords match
+   if (data.password !== data.confirm) {
+     toast.error("Passwords do not match. Please try again.");
+     return;
+   }
+
+   try {
+
+     const res = await axios.post("http://localhost:8080/api/v1/user/signup", {
+       username: data.username,
+       email: data.email,
+       password: data.password
+     });
+
+    
+     const response = res.data;
+
+     
+     console.log(response);
+
+   
+     if (response.success) {
+       toast.success("User Registered successfully. 😊");
+       dispatch(login({ user: response.user, token: response.token }));
+
+       localStorage.setItem("user", response.user);
+       localStorage.setItem("token", response.token);
+
+       navigate("/");
+     } else {
+       
+       toast.error(response.message);
+       navigate("/register");
+     }
+   } catch (error) {
+     console.log(error);
+     toast.error("Something went wrong. Please try after some time. 😢");
+   }
+ };
+
+
   return (
     <>
-      <section className="vh-100" style={{backgroundColor : "#eee"}}>
+      <section className="vh-100" style={{ backgroundColor: "#eee" }}>
         <div className="container h-100">
           <div className="row d-flex justify-content-center align-items-center h-100">
             <div className="col-lg-12 col-xl-11">
-              <div className="card text-black" style={{borderRadius : "25px"}}>
+              <div className="card text-black" style={{ borderRadius: "25px" }}>
                 <div className="card-body p-md-5">
                   <div className="row justify-content-center">
                     <div className="col-md-10 col-lg-6 col-xl-5 order-2 order-lg-1">
@@ -15,7 +74,7 @@ const Register = () => {
                         Sign up
                       </p>
 
-                      <form className="mx-1 mx-md-4">
+                      <form className="mx-1 mx-md-4" onSubmit={handleSubmit}>
                         <div className="d-flex flex-row align-items-center mb-4">
                           <i className="fas fa-user fa-lg me-3 fa-fw"></i>
                           <div
@@ -26,6 +85,10 @@ const Register = () => {
                               type="text"
                               id="form3Example1c"
                               className="form-control"
+                              value={data.username}
+                              onChange={(e) =>
+                                setData({ ...data, username: e.target.value })
+                              }
                             />
                             <label
                               className="form-label"
@@ -46,6 +109,10 @@ const Register = () => {
                               type="email"
                               id="form3Example3c"
                               className="form-control"
+                              value={data.email}
+                              onChange={(e) =>
+                                setData({ ...data, email: e.target.value })
+                              }
                             />
                             <label
                               className="form-label"
@@ -66,6 +133,10 @@ const Register = () => {
                               type="password"
                               id="form3Example4c"
                               className="form-control"
+                              value={data.password}
+                              onChange={(e) =>
+                                setData({ ...data, password: e.target.value })
+                              }
                             />
                             <label
                               className="form-label"
@@ -86,6 +157,10 @@ const Register = () => {
                               type="password"
                               id="form3Example4cd"
                               className="form-control"
+                              value={data.confirm}
+                              onChange={(e) =>
+                                setData({ ...data, confirm: e.target.value })
+                              }
                             />
                             <label
                               className="form-label"
@@ -107,14 +182,13 @@ const Register = () => {
                             className="form-check-label"
                             htmlFor="form2Example3"
                           >
-                            I agree all statements in{" "}
-                            <a href="#!">Terms of service</a>
+                            I agree to all statements in <a>Terms of service</a>
                           </label>
                         </div>
 
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button
-                            type="button"
+                            type="submit" // Changed to submit to trigger form submission
                             data-mdb-button-init
                             data-mdb-ripple-init
                             className="btn btn-primary btn-lg"
@@ -140,6 +214,6 @@ const Register = () => {
       </section>
     </>
   );
-}
+};
 
-export default Register
+export default Register;
