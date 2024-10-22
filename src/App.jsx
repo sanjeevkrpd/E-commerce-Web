@@ -10,6 +10,7 @@ import  {Toaster} from 'react-hot-toast';
 import { store } from "./redux/store";
 import { Provider } from "react-redux";
 import DailyProduct from "./landing_page/DailyProducts/DailyProducts";
+import ProductInDetails from "./Components/ProductInDetails";
 function App() {
   return (
     <>
@@ -24,6 +25,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="register" element={<Register />} />
             <Route path="/dailyProducts" element={<DailyProduct />} />
+            <Route path="/product/:productId" element={<ProductInDetails />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
           <Footer />
