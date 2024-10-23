@@ -19,11 +19,18 @@
 .last{
     margin-right: 50px;
 }
-
-a:hover{
+.sticky-navbar {
+    position: sticky;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+    background-color: white;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+/* a:hover{
    
     color:  rgb(242, 77, 105) !important;
-}
+} */
 @media (max-width: 1300px) {
     .container-fluid.offset-1 {
       margin-left: 0 !important; 

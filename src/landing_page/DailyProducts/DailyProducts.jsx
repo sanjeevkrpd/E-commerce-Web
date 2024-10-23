@@ -44,24 +44,25 @@ const DailyProducts = () => {
 
   useEffect(() => {
     getProducts();
-  }, [0]);
+  }, []);
 
   return (
     <>
       <div className="container mt-5">
         <div className="row ">
           {product.map((product) => (
+            // eslint-disable-next-line react/jsx-key
 
-              <Card
-                key={product._id}
-                productId={product._id}
-                productName={product.productName}
-                productPrice={product.productPrice}
-                productQuantity={product.productQuantity}
-                productImage={product.productImage}
-                productDescription={shortProductDes(product.productDescription)}
-                onClick={() => handleCardClick(product._id)}
-              />
+            <Card
+              key={product._id}
+              productId={product._id}
+              productName={product.productName}
+              productPrice={product.productPrice}
+              productQuantity={product.productQuantity}
+              productImage={product.productImage}
+              productDescription={shortProductDes(product.productDescription)}
+              onClick={() => handleCardClick(`../../product/${product._id}`)}
+            />
           ))}
         </div>
       </div>

@@ -1,66 +1,70 @@
 import { Link } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux"; 
-import { logout } from "../redux/Features/AuthSlice"; 
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../redux/Features/AuthSlice";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { login } from "../redux/Features/AuthSlice";
-import {useNavigate} from 'react-router-dom';
-const Navbar = () => {
-  const dispatch = useDispatch(); 
-  const navigate = useNavigate();
-  const { isLogged, user } = useSelector((state) => state.auth); 
+import { useNavigate } from "react-router-dom";
 
+const Navbar = () => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const { isLogged, user } = useSelector((state) => state.auth);
+  const [cartCount, setCartCount] = useState(0);
+
+  const fetchCartItems = () => {
+    const cartItems = JSON.parse(localStorage.getItem("cartItems")) || [];
+
+    const uniqueItems = [...new Set(cartItems.map((item) => item.productId))];
+    return uniqueItems.length;
+  };
 
   const handleLogout = () => {
-    dispatch(logout()); 
+    dispatch(logout());
   };
-   const token = localStorage.getItem("token");
+  const token = localStorage.getItem("token");
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const verifyUser = async () => {
-      try {
-       
-        if (token) {
-          const response = await axios.post(
-            "http://localhost:8080/api/v1/user/verifyUser",
-            null,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const verifyUser = async () => {
+    try {
+      if (token) {
+        const response = await axios.post(
+          "http://localhost:8080/api/v1/user/verifyUser",
+          null,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`
             }
-          );
-
-          if (response.data.success) {
-            toast.success("User Verified Successfully. 😊")
-            const { user } = response.data;
-
-            dispatch(login({ user, token }));
           }
+        );
 
-          localStorage.clear("token");
-          localStorage.clear("user");
+        if (response.data.success) {
+          toast.success("User Verified Successfully. 😊");
+          const { user } = response.data;
+
+          dispatch(login({ user, token }));
         }
-      } catch (error) {
-        console.error("Verification error:", error);
+
+        localStorage.clear("token");
+        localStorage.clear("user");
       }
-    };
-
-
- 
-  useEffect(() => {
-    
-    if(!isLogged && token){
-        verifyUser();
+    } catch (error) {
+      console.error("Verification error:", error);
     }
-  
+  };
+
+  useEffect(() => {
+    const count = fetchCartItems();
+    setCartCount(count);
+    if (!isLogged && token) {
+      verifyUser();
+    }
   }, [isLogged, token, verifyUser]);
 
-  
   return (
     <>
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
+      <nav className="navbar navbar-expand-lg navbar-light bg-light sticky-navbar">
         <div className="container-fluid offset-1">
           <Link className="navbar-brand active brand" to="/">
             <i className="fa-solid fa-shop"></i> E-Shopping
@@ -76,7 +80,7 @@ const Navbar = () => {
                   <i className="fa-solid fa-cart-shopping"></i>
                 </Link>
                 <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                  {/* handle the cart */}
+                  {cartCount}
                 </span>
               </button>
             </li>
